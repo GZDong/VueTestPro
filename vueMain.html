@@ -32,17 +32,126 @@
         <br>
         <button v-on:click="events">绑定事件</button>
         <br>
+        <div id="app">
+            <!--前面的属性为后面过滤器的输入值-->
+            {{ text | capitalize }}
+            <h1 v-show="seen">使用v-show来判断boolean类型的值，如果为true，这拥有该属性的组件可以显示</h1>
+        </div>
+        <!--v-for="n in 10"-->
+        <div v-for="site in obj">
+            {{ site }}
+        </div>
+        <ul>
+            <li v-for="(value, k) in obj">
+                {{ k }} : {{ value }}
+            </li>
+        </ul>
+        <ul>
+            <template v-for="site in sites">
+                <li>{{ site.name }}</li>
+                <li>--------------</li>
+            </template>
+        </ul>
+
+        <p>原始字符串: {{ text }}</p>
+        <p>计算后反转字符串: {{ reverseText }}</p>
+
+        <div id = "computed_props">
+            千米 : <input type = "text" v-model.trim = "kilometers">
+            米 : <input type = "text" v-model.lazy = "meters">
+        </div>
+        <p id="info"></p>
+        <button v-on:click="counter += 1">增加 1</button>
+        <p>这个按钮被点击了 {{ counter }} 次。</p>
+        <button v-on:click="greet('test')">Greet</button>
+        <br>
+
+        <p>单个复选框：</p>
+        <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox">{{ checked }}</label>
+
+        <p>多个复选框：</p>
+        <input type="checkbox" id="runoob" value="Runoob" v-model="checkedNames">
+        <label for="runoob">Runoob</label>
+        <input type="checkbox" id="google" value="Google" v-model="checkedNames">
+        <label for="google">Google</label>
+        <input type="checkbox" id="taobao" value="Taobao" v-model="checkedNames">
+        <label for="taobao">taobao</label>
+        <br>
+        <span>选择的值为: {{ checkedNames }}</span>
+        <br>
+        <input type="radio" id="runoob" value="Runoob" v-model="picked">
+        <label for="runoob">Runoob</label>
+        <br>
+        <input type="radio" id="google" value="Google" v-model="picked">
+        <label for="google">Google</label>
+        <br>
+        <span>选中值为: {{ picked }}</span>
+        <br>
+        <select v-model="selected" name="fruit">
+            <option value="">选择一个网站</option>
+            <option value="www.runoob.com">Runoob</option>
+            <option value="www.google.com">Google</option>
+        </select>
+
+        <div id="output">
+            选择的网站是: {{selected}}
+        </div>
+        <br>
     </div>
     <script type="text/javascript">
         let data = { site : 'tetete',url: "tttteee.com", alexa: 10000,
             message:'<h1> 哟哟哟</h1>',class1:false,
-            seen:"true",textText:"begin data"}
+            seen:"true",textText:"begin data",
+            text:'jordan',sites:[{name:'one'},{name:'two'},{name:'three'}],
+            obj:{param1:'属性1', param2:'属性2', param3:'属性3'},
+            kilometers : 0,
+            meters:0,counter: 0,name: 'Vue.js',
+            checked : false,
+            checkedNames: [],
+            picked : 'Runoob',
+            selected: ''}
         let vm = new Vue({
             el: '#vue_test',
             data: data,
             methods:{
                 events:function(){
                     alert('v-on:click绑定事件');
+                },
+                greet: function (event) {
+                    // `this` 在方法里指当前 Vue 实例
+                    alert('Hello ' + event + '!')
+                }
+            },
+            //过滤器，用于对组件输出数据的处理
+            filters:{
+                capitalize:function (value) {
+                    if(!value){
+                        return  '';
+                    }
+                    value = value.toString();
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                }
+            },
+            // 我们可以使用 methods 来替代 computed，效果上两个都是一样的，
+            // 但是 computed 是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。
+            // 而使用 methods ，在重新渲染的时候，函数总会重新调用执行。
+            computed:{
+                // 计算属性的 getter
+                reverseText:function () {
+                    return  this.text.split('').reverse().join('')
+                }
+            },
+            watch:{
+                kilometers:function(val) {
+                    this.kilometers = val;
+                    this.meters = val * 1000;
+                    $('#info').html(this.kilometers +'<br>' + this.meters);
+                },
+                meters : function (val) {
+                    this.kilometers = val/ 1000;
+                    this.meters = val;
+                    $('#info').html(this.kilometers + '<br>' + this.meters);
                 }
             }
         })
