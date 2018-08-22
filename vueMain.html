@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VueLearning</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+
+</head>
+<style>
+    .class1{
+        background: #444;
+        color: #eee;
+    }
+</style>
+<body>
+    <div id="vue_test">
+        <h1>site: {{site}}</h1>
+        <h1>url:{{url}}</h1>
+        <h1>Alexa:{{alexa}}</h1>
+        <div v-html="message"></div>
+        <label for="r1">修改颜色</label><input type="checkbox" v-model = "class1" id="r1">
+        <div v-bind:class="{'class1': class1}">
+            <!--可能会有多个class属性，并且v-bind中双引号内的字符串可以指向data中的属性-->
+            directiva v-bind : class
+        </div>
+        <template v-if="seen">
+            <h1>v-if中值指定的seen为true就显示这段话</h1>
+        </template>
+        <p>{{textText}}</p>
+        <input v-model="textText">
+        <br>
+        <button v-on:click="events">绑定事件</button>
+        <br>
+    </div>
+    <script type="text/javascript">
+        let data = { site : 'tetete',url: "tttteee.com", alexa: 10000,
+            message:'<h1> 哟哟哟</h1>',class1:false,
+            seen:"true",textText:"begin data"}
+        let vm = new Vue({
+            el: '#vue_test',
+            data: data,
+            methods:{
+                events:function(){
+                    alert('v-on:click绑定事件');
+                }
+            }
+        })
+        $('#vue_test').append(vm.site === data.site)
+        $('#vue_test').append('<br>')
+
+        vm.site = 'kobe'
+        $('#vue_test').append(data.site + '<br>')
+
+        data.alexa = 2222
+        $('#vue_test').append(vm.alexa)
+        $('#vue_test').append('这说明了，在new Vue()中指定的data是一个指针而已')
+    </script>
+</body>
+</html>
